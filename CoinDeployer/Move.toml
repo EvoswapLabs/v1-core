@@ -1,0 +1,16 @@
+[package]
+name = "CoinDeployer"
+version = "1.0.0"
+authors = []
+
+[addresses]
+evo_framework = "0x957ca1fa0c0a601837158287d8f6e5c6742f4ce83fae3219f8a2103ad0e5fd93"
+
+[dev-addresses]
+
+[dependencies.SupraFramework]
+git = "https://github.com/Entropy-Foundation/aptos-core.git"
+rev = "dev"
+subdir = "aptos-move/framework/supra-framework"
+
+[dev-dependencies]
