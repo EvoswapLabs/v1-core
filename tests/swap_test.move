@@ -39,7 +39,7 @@ module evo::swap_test {
         account::create_account_for_test(signer::address_of(dev));
         account::create_account_for_test(signer::address_of(admin));
         // account::create_account_for_test(signer::address_of(treasury));
-        resource_account::create_resource_account(dev, b"evo-v1", x"");
+        resource_account::create_resource_account(dev, b"evo-v1-1", x"");
         admin::init_test(resource_account);
         account::create_account_for_test(signer::address_of(evo_framework));
         coin::register<APT>(evo_framework);    // for the deployer
@@ -57,7 +57,7 @@ module evo::swap_test {
         
         // mint some APT to be able to pay for the fee of generate_coin
         supra_coin::mint(&supra_framework, signer::address_of(alice), 100000000000 * pow(10, 8));
-        supra_coin::mint(&supra_framework, signer::address_of(bob), 10000000000 * pow(10, 8));
+        coin::transfer<APT>(alice, signer::address_of(bob), 50000000000 * pow(10, 8));
         // destroy APT mint and burn caps
         coin::destroy_mint_cap<APT>(supra_coin_mint_cap);
         coin::destroy_burn_cap<APT>(supra_coin_burn_cap);
