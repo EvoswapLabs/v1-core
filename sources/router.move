@@ -1,6 +1,6 @@
 module evo::router {
 
-    use supra_framework::supra_coin::{SupraCoin as APT};
+    use supra_framework::supra_coin::{SupraCoin as SUPRA};
     use supra_framework::code;
     use supra_framework::coin;
     use evo::admin;
@@ -9,7 +9,6 @@ module evo::router {
     use evo::swap_utils;
     use evo::swap;
     use std::signer;
-
 
     public entry fun upgrade_router_contract(sender: &signer, metadata_serialized: vector<u8>, code: vector<vector<u8>>) {
         let sender_addr = signer::address_of(sender);
@@ -187,27 +186,12 @@ module evo::router {
         y_min_out: u64
     ) { multi_hop_exact_input<X, Y, Z>(sender, x_in, y_min_out); }
 
-    // Z is APT
+    // Z is SUPRA
     public entry fun swap_exact_input_with_apt_as_intermidiate<X, Y>(
         sender: &signer,
         x_in: u64,
         y_min_out: u64
-    ) { swap_exact_input_with_one_intermediate_coin<X, Y, APT>( sender, x_in, y_min_out) }
-        
-    // TODO: Z is BAPT
-
-    // TODO: Z is USDC
-
-    // TODO: not tested
-    // public entry fun swap_exact_input_with_two_intermediate_coins<X, Y, Z, W>(
-    //     sender: &signer,
-    //     x_in: u64,
-    //     y_min_out: u64
-    // ) {
-    //     let z_in = swap_exact_input_internal<X, Z>(sender, x_in, 0);    // TODO: should not be 0
-    //     let w_in = swap_exact_input_internal<Z, W>(sender, z_in, 0);    // TODO: should not be 0
-    //     swap_exact_input_internal<W, Y>(sender, w_in, y_min_out);
-    // }
+    ) { swap_exact_input_with_one_intermediate_coin<X, Y, SUPRA>( sender, x_in, y_min_out) }
 
     // Swap miniumn possible amount of X to exact output amount of Y
     public entry fun swap_exact_output<X, Y>(sender: &signer, y_out: u64, x_max_in: u64) {
@@ -252,20 +236,22 @@ module evo::router {
         }
     }
 
+    #[view]
     public fun get_amount_in<X, Y>(y_out_amount: u64): u64 {
-        assert!(swap::is_pair_created<X, Y>(), errors::pair_not_created());
+        assert!(swap::is_pair_created<X, Y>() || swap::is_pair_created<Y, X>(), errors::pair_not_created());
         let is_x_to_y = swap_utils::sort_token_type<X, Y>();
         get_amount_in_internal<X, Y>(is_x_to_y, y_out_amount)
     }
 
+    #[view]
     public fun get_amount_out<X, Y>(x_in_amount: u64): u64 {
-        assert!(swap::is_pair_created<X, Y>(), errors::pair_not_created());
+       assert!(swap::is_pair_created<X, Y>() || swap::is_pair_created<Y, X>(), errors::pair_not_created());
         let is_x_to_y = swap_utils::sort_token_type<X, Y>();
         get_amount_out_internal<X, Y>(is_x_to_y, x_in_amount)
     }
 
     public fun swap_exact_x_to_y_direct_external<X, Y>(x_in: coin::Coin<X>): coin::Coin<Y> {
-        assert!(swap::is_pair_created<X, Y>(), errors::pair_not_created());
+        assert!(swap::is_pair_created<X, Y>() || swap::is_pair_created<Y, X>(), errors::pair_not_created());
         let x_in_amount = coin::value(&x_in);
         let is_x_to_y = swap_utils::sort_token_type<X, Y>();
         let y_out = get_intermediate_output<X, Y>(is_x_to_y, x_in);

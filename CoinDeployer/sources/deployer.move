@@ -58,9 +58,15 @@ module evo_framework::deployer {
     const ERROR_NO_CAPABILITIES: u64 = 4;
 
 
-    entry public fun init(evo_framework: &signer, fee: u64, owner: address){
+    fun init_module(evo_framework: &signer){
         assert!(signer::address_of(evo_framework) == @evo_framework, ERROR_INVALID_evo_ACCOUNT);
-        move_to(evo_framework, Config { owner, fee })
+        move_to(
+            evo_framework, 
+            Config { 
+                owner: signer::address_of(evo_framework),
+                fee: 0
+            }
+        );
     }
 
     entry public fun update_fee(evo_framework: &signer, new_fee: u64) acquires Config {
@@ -302,7 +308,7 @@ module evo_framework::deployer {
     ) acquires Config {
         supra_framework::account::create_account_for_test(signer::address_of(&evo_framework));
         // supra_framework::account::create_account_for_test(signer::address_of(user));
-        init(&evo_framework, 1, signer::address_of(&evo_framework));
+        init_module(&evo_framework);
         assert!(get_fee() == 1, 0);
         let (supra_coin_burn_cap, supra_coin_mint_cap) = supra_coin::initialize_for_test(&supra_framework);
         // register aptos coin and mint some APT to be able to pay for the fee of generate_coin
@@ -343,7 +349,7 @@ module evo_framework::deployer {
         supra_framework::account::create_account_for_test(new_evo_addr);
         // features::change_feature_flags(&supra_framework, vector[26], vector[]);
         // supra_framework::account::create_account_for_test(signer::address_of(user));
-        init(&evo_framework, 100, signer::address_of(&evo_framework));
+        init_module(&evo_framework);
         assert!(get_fee() == 100, 0);
         update_fee(&evo_framework, 200);
         assert!(get_fee() == 200, 0);
