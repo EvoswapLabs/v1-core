@@ -354,7 +354,7 @@ module evo::swap {
         let (burn_cap, freeze_cap, mint_cap) = coin::initialize<LPToken<X, Y>>(
             &resource_signer,
             lp_name,
-            string::utf8(b"BAPT-LP"),
+            string::utf8(b"EVO-LP"),
             8,
             true
         );
