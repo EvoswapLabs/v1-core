@@ -954,7 +954,7 @@ module evo::swap {
             temp_toggle_fee_on_transfer_fees<Y, X, Y>(true);
         };
 
-        event::emit(UpdateFeeTier<X, Y> { fee_tier });
+        event::emit(UpdateFeeTier<X, Y> { fee_tier: type_info::type_name<Tier>() });
     }
 
     // Swap
