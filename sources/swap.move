@@ -2,7 +2,7 @@ module evo::swap {
 
     use std::signer;
     use std::option::{Self, Option};
-    use std::string;
+    use std::string::{Self, String};
 
     use aptos_std::type_info;
 
@@ -954,7 +954,7 @@ module evo::swap {
             temp_toggle_fee_on_transfer_fees<Y, X, Y>(true);
         };
 
-        event::emit(UpdateFeeTier { fee_tier });
+        event::emit(UpdateFeeTier<X, Y> { fee_tier });
     }
 
     // Swap
