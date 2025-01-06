@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-evo_framework = "0x957ca1fa0c0a601837158287d8f6e5c6742f4ce83fae3219f8a2103ad0e5fd93"
+evo_framework = "0x2c5796ed26cb904a336bb51e1ad41dac38daf2e2f5e8226efeec22eb4e259d7e"
 
 [dev-addresses]
 
