@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-evo = "0x5e069deb50049cff0522330a50a858cc91ad3ef554cb39d3541d480dde7bc357"
+evo = "0x2c4b468c5e624d5f7edae540a9d78eb25496cad1a86472743c9f5d6f0be69586"
 dev = "0x2c5796ed26cb904a336bb51e1ad41dac38daf2e2f5e8226efeec22eb4e259d7e"
 
 admin = "0x2c5796ed26cb904a336bb51e1ad41dac38daf2e2f5e8226efeec22eb4e259d7e"
