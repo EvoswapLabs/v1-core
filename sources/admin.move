@@ -147,8 +147,8 @@ module evo::admin {
         move_to(
             &resource_signer, 
             Universal {
-                liquidity_fee_modifier: 10,  // 0.1%
-                treasury_fee_modifier: 20,   // 0.2%
+                liquidity_fee_modifier: 70,  // 0.7%
+                treasury_fee_modifier: 30,   // 0.3%
             }
         );
 
