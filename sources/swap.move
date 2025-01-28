@@ -2,7 +2,7 @@ module evo::swap {
 
     use std::signer;
     use std::option::{Self, Option};
-    use std::string;
+    use std::string::{Self, String};
 
     use aptos_std::type_info;
 
@@ -111,6 +111,11 @@ module evo::swap {
         user: address,
         token_x: string::String,
         token_y: string::String
+    }
+
+    #[event]
+    struct UpdateFeeTier<phantom X, phantom Y> has drop, store {
+        fee_tier: String,
     }
 
     public(friend) fun add_swap_event_with_address<X, Y>(
@@ -915,19 +920,20 @@ module evo::swap {
         };
         // add new dex fees based on the tier
         let metadata = borrow_global_mut<TokenPairMetadata<X, Y>>(constants::get_resource_account_address());
-        if (type_info::type_of<Tier>() == type_info::type_of<admin::Universal>()) {
+        let fee_tier = type_info::type_of<Tier>();
+        if (fee_tier == type_info::type_of<admin::Universal>()) {
             // get the fees
             let (liquidity_fee, treasury_fee) = admin::get_universal_tier_fees();
             // update pair fees 
             metadata.liquidity_fee = liquidity_fee;
             metadata.treasury_fee = treasury_fee;
-        } else if (type_info::type_of<Tier>() == type_info::type_of<admin::PopularTraded>()) {
+        } else if (fee_tier == type_info::type_of<admin::PopularTraded>()) {
             // get the fees
             let (liquidity_fee, treasury_fee) = admin::get_popular_traded_tier_fees();
             // update pair fees 
             metadata.liquidity_fee = liquidity_fee;
             metadata.treasury_fee = treasury_fee;
-        } else if (type_info::type_of<Tier>() == type_info::type_of<admin::Stable>()) {
+        } else if (fee_tier == type_info::type_of<admin::Stable>()) {
             // get the fees
             let (liquidity_fee, treasury_fee) = admin::get_stable_tier_fees();
             // update pair fees 
@@ -947,6 +953,8 @@ module evo::swap {
         if (is_fee_on_transfer_registered<Y, X, Y>()) {
             temp_toggle_fee_on_transfer_fees<Y, X, Y>(true);
         };
+
+        event::emit(UpdateFeeTier<X, Y> { fee_tier: type_info::type_name<Tier>() });
     }
 
     // Swap
